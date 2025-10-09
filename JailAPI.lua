@@ -1,5 +1,5 @@
 --[[//
-JailAPI 1a
+JailAPI 1d
 
 Documentation:
 
@@ -29,7 +29,7 @@ API:GetStyleTables() -- Returns style tables for notifications
     ["TimePosition"] = 0.07 -- I dont fucking know what is this doing, 
    }
   ]
-API:SelectTeam(Team: string) -- Buggy, selecting team (May cause infinity waiting due to team switch cooldown)
+API:SelectTeam(Team: string) -- Choosing team by string
 
 API.WeaponSystem:GetGuns() -- Returns an table with gun names, and attributes (Jailbreak attributes, and api`s bool attribute 'Equipped')
 API.WeaponSystem:EquipGun(GunName: string, State: bool) -- Equipping gun
@@ -300,10 +300,22 @@ function API:SelectTeam(Team)
         return error("invalid team string")
     end
 
-    firesignal(game:GetService("Players").LocalPlayer.PlayerGui.AppUI.Buttons.Sidebar.TeamSwitch.TeamSwitch.MouseButton1Down)
-    repeat task.wait() until game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("ConfirmationGui") ~= nil
-    firesignal(game:GetService("Players").LocalPlayer.PlayerGui.ConfirmationGui.Confirmation.Background.ContainerButtons.ContainerYes.Button.MouseButton1Down)
-    repeat task.wait() until game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("TeamSelectGui") ~= nil
+    if game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("TeamSelectGui") == nil then
+        firesignal(game:GetService("Players").LocalPlayer.PlayerGui.AppUI.Buttons.Sidebar.TeamSwitch.TeamSwitch.MouseButton1Down)
+        repeat task.wait() until game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("ConfirmationGui") ~= nil
+        firesignal(game:GetService("Players").LocalPlayer.PlayerGui.ConfirmationGui.Confirmation.Background.ContainerButtons.ContainerYes.Button.MouseButton1Down)
+        
+        for Index = 1, 50 do
+            if game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("TeamSelectGui") ~= nil then
+                break
+            end
+            wait(0.05)
+
+            if Index == 50 then
+                return "cooldown"
+            end
+        end
+    end
 
     if Team == "Prisoner" then
         firesignal(game:GetService("Players").LocalPlayer.PlayerGui.TeamSelectGui.TeamSelect.Frame.MiddleContainer.TeamsContainer.ImagesContainer.CriminalTeam.Activated)
