@@ -29,6 +29,7 @@ API:GetStyleTables() -- Returns style tables for notifications
     ["TimePosition"] = 0.07 -- I dont fucking know what is this doing, 
    }
   ]
+API:SelectTeam(Team: string) -- Buggy, selecting team (May cause infinity waiting due to team switch cooldown)
 
 API.WeaponSystem:GetGuns() -- Returns an table with gun names, and attributes (Jailbreak attributes, and api`s bool attribute 'Equipped')
 API.WeaponSystem:EquipGun(GunName: string, State: bool) -- Equipping gun
@@ -41,6 +42,8 @@ API.VehicleSystem:DropRope() -- Dropping/Pulling rope on any Heli
 API.VehicleSystem:DropBomb() -- Attempting to drop bomb
 API.VehicleSystem:SpawnChassis(Name: string) -- Spawning ground vehicle
 API.VehicleSystem:SpawnHeli(Name: string) -- Spawning heli (Required to be near heli spawner)
+
+API.Movement:Tween(ToObject: CFrame;Vector3;Part, Speed: int;float, ObjectToMove: Part)
 \\]]--
 
 local API = {}
