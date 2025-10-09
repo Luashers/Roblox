@@ -50,7 +50,7 @@ local VehicleSystem = {}
 
 local Movement = {}
 
-ba = ba
+ba = game:GetService("ReplicatedStorage")
 bb = game:GetService("Workspace")
 ab = require(ba.Game.Robbery.PuzzleFlow)
 aa = getupvalue(ab.Init, 3)
@@ -61,7 +61,7 @@ ah = require(ba.Game.Vehicle.Heli)
 ag = debug.getupvalue(ah, 14)
 ai = require(ba.Game.DefaultActions)
 aj = require(ba.Game.Notification)
-ak = game:GetService("Players").LocalPlayer[game:GetService("Players").LocalPlayer.CurrentInventory]
+ak = game:GetService("Players").LocalPlayer.Folder
 
 function PromptSystem:FindPrompts(Text)
     Actions = {}
@@ -290,6 +290,23 @@ function WeaponSystem:EquipGun(GunName, State)
     end
 
     return error("no gun found")
+end
+
+function API:SelectTeam(Team)
+    if Team ~= "Police" and Team ~= "Prisoner" then
+        return error("invalid team string")
+    end
+
+    firesignal(game:GetService("Players").LocalPlayer.PlayerGui.AppUI.Buttons.Sidebar.TeamSwitch.TeamSwitch.MouseButton1Down)
+    repeat task.wait() until game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("ConfirmationGui") ~= nil
+    firesignal(game:GetService("Players").LocalPlayer.PlayerGui.ConfirmationGui.Confirmation.Background.ContainerButtons.ContainerYes.Button.MouseButton1Down)
+    repeat task.wait() until game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("TeamSelectGui") ~= nil
+
+    if Team == "Prisoner" then
+        firesignal(game:GetService("Players").LocalPlayer.PlayerGui.TeamSelectGui.TeamSelect.Frame.MiddleContainer.TeamsContainer.ImagesContainer.CriminalTeam.Activated)
+    else
+        firesignal(game:GetService("Players").LocalPlayer.PlayerGui.TeamSelectGui.TeamSelect.Frame.MiddleContainer.TeamsContainer.ImagesContainer.PoliceTeam.Activated)
+    end
 end
 
 API.WeaponSystem = WeaponSystem
